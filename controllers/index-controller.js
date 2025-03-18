@@ -1,6 +1,6 @@
 const userModel = require("../models/user-model");
 const hisaabModel = require("../models/hisab-model")
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 
@@ -36,7 +36,8 @@ try {
    let token = jwt.sign({id: user._id , email:user.email}, process.env.JWT_KEY);
 
    res.cookie("token", token);
-   res.send("Account created succesfully")
+   res.redirect("/")
+
 } catch (error) {
    res.send(error.message)
 }
