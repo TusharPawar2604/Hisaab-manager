@@ -51,7 +51,7 @@ module.exports.loginController = async function (req, res){
    let user = await userModel.findOne({email}).select("+password");
    
    
-   if(!user) return res.redirect("/?error=true");
+   if(!user) return res.redirect("/");
    let result = await bcrypt.compare(password , user.password)
   
 if (result){
