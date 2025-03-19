@@ -2,6 +2,8 @@ const userModel = require("../models/user-model");
 const hisaabModel = require("../models/hisab-model")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const flash = require('connect-flash');
+const session = require('express-session');
 
 
 module.exports.landingPageController = function (req, res){
@@ -51,13 +53,17 @@ module.exports.loginController = async function (req, res){
    let user = await userModel.findOne({email}).select("+password");
    
    
-   if(!user) return res.redirect("/");
+   if(!user) {
+      req.flash('error_msg', 'Invalid email or password');
+      return res.redirect("/");
+   }
    let result = await bcrypt.compare(password , user.password)
   
 if (result){
    let token = jwt.sign({id: user._id , email:user.email}, process.env.JWT_KEY);
 
    res.cookie("token", token);
+   req.flash('success_msg', 'Login successful!');
    res.redirect("/profile")
 }
 else {
@@ -71,6 +77,7 @@ else {
 
 module.exports.logoutController = async function (req, res){
    res.cookie("token", "");
+   req.flash("success_msg", "You have logged out successfully.");
    return res.redirect("/")
 }
 
