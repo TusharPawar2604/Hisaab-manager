@@ -1,18 +1,29 @@
-<%- include('./partials/header.ejs') %>
-    <div class="logincontainer w-full h-[80%] flex items-center justify-center">
-        <div class="loginpanel">
-            <h3 class="text-2xl mb-3">Create account</h3>
-            <form action="/register" class="flex flex-col gap-2 items-start" method="post">
-                <input class="block px-3 py-2 border-[1px] border-zinc-100 rounded-md" type="email" placeholder="Email"
-                    name="email">
-                <input class="block px-3 py-2 border-[1px] border-zinc-100 rounded-md" type="text"
-                    placeholder="Username" name="username">
-                <input class="block px-3 py-2 border-[1px] border-zinc-100 rounded-md" type="text"
-                    placeholder="Full Name" name="name">
-                <input class="block px-3 py-2 border-[1px] border-zinc-100 rounded-md" type="password"
-                    placeholder="password" name="password">
-                <input class="block px-4 py-2 bg-blue-500 rounded-md text-white" type="submit" value="Create">
-            </form>
-            <a class="mt-5 inline-block text-blue-500" href="/">Have an account, login here.</a>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hisaab Manager - Signup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <%- include('./partials/header.ejs') %>
+
+  <div class="w-full flex-1 flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <h3 class="text-2xl font-semibold mb-4 text-center">Create account</h3>
+      <form action="/register" method="post" class="flex flex-col gap-3">
+        <input type="email" name="email" placeholder="Email" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+        <input type="text" name="username" placeholder="Username" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+        <input type="text" name="name" placeholder="Full Name" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+        <input type="password" name="password" placeholder="Password" class="w-full px-3 py-2 border border-gray-300 rounded-md" required>
+        <input type="submit" value="Create" class="w-full px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer">
+      </form>
+      <div class="text-center mt-5">
+        <a href="/" class="text-blue-500">Have an account, login here.</a>
+      </div>
     </div>
+  </div>
+</body>
+</html>
