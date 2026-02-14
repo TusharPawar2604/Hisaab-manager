@@ -85,12 +85,15 @@ module.exports.deleteController = async function (req, res) {
   const id = req.params.id;
 
   try {
+    console.log(`[DELETE] Attempting to delete hisaab ${id} for user ${req.user._id}`);
+    
     const hisaab = await hisaabModel.findOne({
       _id: id,
       user: req.user._id
     });
 
     if (!hisaab) {
+      console.log(`[DELETE] Hisaab not found or unauthorized for ${id}`);
       req.flash('error_msg', 'Hisaab not found or unauthorized');
       return res.redirect("/profile");
     }
@@ -98,6 +101,8 @@ module.exports.deleteController = async function (req, res) {
     await hisaabModel.deleteOne({
       _id: id
     });
+
+    console.log(`[DELETE] Hisaab ${id} deleted`);
 
     // Remove hisaab from user's array to keep data clean
     await userModel.updateOne(
@@ -108,7 +113,7 @@ module.exports.deleteController = async function (req, res) {
     req.flash('success_msg', 'Hisaab deleted successfully');
     return res.redirect("/profile");
   } catch (err) {
-      console.error("Error deleting hisaab:", err);
+      console.error("[DELETE] Error deleting hisaab:", err);
       req.flash('error_msg', 'Error deleting Hisaab');
       return res.redirect("/profile");
   }
