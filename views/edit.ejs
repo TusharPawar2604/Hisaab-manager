@@ -1,39 +1,81 @@
 <%- include('./partials/header.ejs') %>
-    <div class="container mx-auto p-6">
-        <div class="max-w-lg mx-auto bg-white p-6 border border-gray-300 rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold mb-4">Create New Hisaab</h2>
-            <form action="/hisaab/edit/<%= hisaab._id %>" method="post">
-                <div class="mb-4">
-                    <input value="<%= hisaab.title  %>" name="title" type="text" placeholder="Shopping Hisaab, Ghar ka Kharch..."
-                        class="w-full p-2 border border-gray-300 rounded">
-                </div>
-                <div class="mb-4">
-                    <textarea  name="description" placeholder="Daal, Aata, Cheeni"
-                        class="resize-none w-full p-2 border border-gray-300 rounded h-32"><%= hisaab.description  %></textarea>
-                </div>
-                <div class="mb-4">
-                    <label class="inline-flex items-center">
-                        <input <% if( hisaab.encrypted){ %>  checked  <% } %> name="encrypted" type="checkbox" class="form-checkbox">
-                        <span class="ml-2">Encrypt this file</span>
-                    </label>
-                    <input value="<%= hisaab.passcode %>" name="passcode" type="password" placeholder="Passcode"
-                        class="w-full mt-2 p-2 border border-gray-300 rounded">
-                </div>
-                <div class="mb-4">
-                    <label class="inline-flex items-center">
-                        <input <% if( hisaab.shareable){ %>  checked  <% } %>  name="shareable" type="checkbox" class="form-checkbox">
-                        <span class="ml-2">Shareable file?</span>
-                    </label>
-                </div>
-                <div class="mb-4">
-                    <label class="inline-flex items-center">
-                        <input <% if( hisaab.editPermissions){ %>  checked  <% } %> name="editpermissions" type="checkbox" class="form-checkbox">
-                        <span class="ml-2">Edit permissions.</span>
-                    </label>
-                </div>
+    <div class="w-full min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
+        <div class="bg-white p-8 sm:p-10 rounded-2xl shadow-lg w-full max-w-lg border border-slate-100">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">Edit Hisaab</h2>
+                <p class="text-slate-500 text-sm mt-1">Update your hisaab details</p>
+            </div>
+
+            <form action="/hisaab/edit/<%= hisaab._id %>" method="post" class="space-y-5">
                 <div>
-                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Create New Hisaab</button>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Title</label>
+                    <input value="<%= hisaab.title %>" name="title" type="text"
+                        placeholder="e.g., Monthly Groceries, Goa Trip"
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-900 placeholder:text-slate-400">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+                    <textarea name="description" placeholder="List your items here..."
+                        class="resize-y w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-900 placeholder:text-slate-400 h-32"><%= hisaab.description %></textarea>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="encrypted" name="encrypted" type="checkbox" <% if(hisaab.encrypted){ %> checked
+                            <% } %> class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500
+                                focus:ring-2">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="encrypted" class="font-medium text-slate-700">Encrypt this file</label>
+                            <p class="text-slate-500 text-xs">Password protect this hisaab</p>
+                        </div>
+                    </div>
+
+                    <div id="passcode-container"
+                        class="<%= hisaab.encrypted ? '' : 'hidden' %> transition-all duration-300">
+                        <input value="<%= hisaab.passcode %>" name="passcode" type="password"
+                            placeholder="Set a passcode"
+                            class="mt-2 w-full px-4 py-2 bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center">
+                        <input id="shareable" name="shareable" type="checkbox" <% if(hisaab.shareable){ %> checked <% }
+                            %> class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500
+                            focus:ring-2">
+                            <label for="shareable" class="ml-2 text-sm font-medium text-slate-700">Shareable</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="editpermissions" name="editpermissions" type="checkbox" <%
+                            if(hisaab.editpermissions){ %> checked <% } %> class="w-4 h-4 text-blue-600 bg-gray-100
+                            border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                            <label for="editpermissions" class="ml-2 text-sm font-medium text-slate-700">Editable by
+                                others</label>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform active:scale-[0.98]">
+                        Update Hisaab
+                    </button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        const encryptedCheckbox = document.getElementById('encrypted');
+        const passcodContainer = document.getElementById('passcode-container');
+
+        encryptedCheckbox.addEventListener('change', function () {
+            if (this.checked) {
+                passcodContainer.classList.remove('hidden');
+            } else {
+                passcodContainer.classList.add('hidden');
+            }
+        });
+    </script>

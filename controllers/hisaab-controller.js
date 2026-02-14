@@ -15,7 +15,7 @@ module.exports.createhisaabController = async function (req, res) {
     let hisaabcreated = await hisaabModel.create({
       title,
       description,
-      user: req.user_id,
+      user: req.user._id,
       passcode,
       encrypted,
       shareable,

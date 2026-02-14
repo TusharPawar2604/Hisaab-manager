@@ -30,12 +30,10 @@ const hisaabSchema = new mongoose.Schema({
         type: String,
         default: "",
     },
-    editPermissions: [
-        { 
-            type: Boolean, 
-            default: false,
-        }
-    ]
+    editpermissions: { 
+        type: Boolean, 
+        default: false,
+    }
 }, {
     timestamps: true
 });
