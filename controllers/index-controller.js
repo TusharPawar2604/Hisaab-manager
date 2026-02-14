@@ -41,7 +41,8 @@ try {
    res.redirect("/")
 
 } catch (error) {
-   res.send(error.message)
+   console.error("Error in registerController:", error);
+   res.status(500).send("Internal Server Error: " + error.message);
 }
 
 }
