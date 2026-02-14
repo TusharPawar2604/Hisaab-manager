@@ -87,21 +87,30 @@ module.exports.deleteController = async function (req, res) {
   try {
     console.log(`[DELETE] Attempting to delete hisaab ${id} for user ${req.user._id}`);
     
+    // Diagnostic Step: Find by ID only first
     const hisaab = await hisaabModel.findOne({
-      _id: id,
-      user: req.user._id
+      _id: id
     });
 
     if (!hisaab) {
-      console.log(`[DELETE] Hisaab not found or unauthorized for ${id}`);
-      req.flash('error_msg', 'Hisaab not found or unauthorized');
+      console.log(`[DELETE] Hisaab ${id} does not exist in database`);
+      req.flash('error_msg', 'Hisaab not found');
       return res.redirect("/profile");
+    }
+
+    console.log(`[DELETE] Found Hisaab ${id}. Owner is: ${hisaab.user}, Requesting User is: ${req.user._id}`);
+    
+    // Check if ownership matches (use toString() for safe comparison of ObjectIds)
+    if (hisaab.user.toString() !== req.user._id.toString()) {
+        console.log(`[DELETE] Ownership mismatch! rejecting delete request.`);
+        req.flash('error_msg', 'You are not authorized to delete this Hisaab');
+        return res.redirect("/profile");
     }
 
     await hisaabModel.deleteOne({
       _id: id
     });
-
+    
     console.log(`[DELETE] Hisaab ${id} deleted`);
 
     // Remove hisaab from user's array to keep data clean
