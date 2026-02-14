@@ -82,23 +82,36 @@ module.exports.verifyHisaabController = async function (req, res) {
 
 
 module.exports.deleteController = async function (req, res) {
-
   const id = req.params.id;
 
-  const hisaab = await hisaabModel.findOne({
-    _id: id,
-    user: req.user_id
-  });
-  if (!hisaab) {
+  try {
+    const hisaab = await hisaabModel.findOne({
+      _id: id,
+      user: req.user._id
+    });
+
+    if (!hisaab) {
+      req.flash('error_msg', 'Hisaab not found or unauthorized');
+      return res.redirect("/profile");
+    }
+
+    await hisaabModel.deleteOne({
+      _id: id
+    });
+
+    // Remove hisaab from user's array to keep data clean
+    await userModel.updateOne(
+        { _id: req.user._id },
+        { $pull: { hisaab: id } }
+    );
+
+    req.flash('success_msg', 'Hisaab deleted successfully');
     return res.redirect("/profile");
+  } catch (err) {
+      console.error("Error deleting hisaab:", err);
+      req.flash('error_msg', 'Error deleting Hisaab');
+      return res.redirect("/profile");
   }
-
-  await hisaabModel.deleteOne({
-    _id: id
-  });
-  req.flash('success_msg', 'Hisaab deleted successfully');
-  return res.redirect("/profile");
-
 }
 
 module.exports.editController = async function (req, res) {
