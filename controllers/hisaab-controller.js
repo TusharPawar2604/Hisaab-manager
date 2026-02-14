@@ -100,8 +100,22 @@ module.exports.deleteController = async function (req, res) {
 
     console.log(`[DELETE] Found Hisaab ${id}. Owner is: ${hisaab.user}, Requesting User is: ${req.user._id}`);
     
-    // Check if ownership matches (use toString() for safe comparison of ObjectIds)
-    if (hisaab.user.toString() !== req.user._id.toString()) {
+    // Check if ownership matches
+    let isOwner = false;
+    if (hisaab.user) {
+        if (hisaab.user.toString() === req.user._id.toString()) {
+            isOwner = true;
+        }
+    } else {
+        console.log(`[DELETE] Hisaab ${id} has no owner. Checking user's hisaab list for legacy ownership.`);
+        // Fallback: Check if the logged-in user has this hisaab ID in their record
+        if (req.user.hisaab && req.user.hisaab.some(hId => hId.toString() === id)) {
+            console.log(`[DELETE] Legacy ownership confirmed via user profile.`);
+            isOwner = true;
+        }
+    }
+
+    if (!isOwner) {
         console.log(`[DELETE] Ownership mismatch! rejecting delete request.`);
         req.flash('error_msg', 'You are not authorized to delete this Hisaab');
         return res.redirect("/profile");
